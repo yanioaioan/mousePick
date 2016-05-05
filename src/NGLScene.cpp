@@ -228,33 +228,36 @@ void NGLScene::mouseMoveEvent (QMouseEvent * _event)
 
 ngl::Vec3 NGLScene::getWorldSpace(int _x, int _y)
 {
-  std::cout<<"Mouse pos "<<_x<<" "<<_y<<" ";
-  ngl::Mat4 t=m_cam.getProjectionMatrix();//m_projection;
-  ngl::Mat4 v=m_cam.getViewMatrix();//m_view;
-  // as ngl:: and OpenGL use different formats need to transpose the matrix.
-  t.transpose();
-  v.transpose();
-  ngl::Mat4 inverse=( t*v).inverse();
 
-  ngl::Vec4 tmp(0,0,1.0f,1.0f);
-  // convert into NDC
-  tmp.m_x=(2.0f * _x) / width() - 1.0f;
-  tmp.m_y=1.0f - (2.0f * _y) / height();
-  // scale by inverse MV * Project transform
-  ngl::Vec4 obj=inverse*tmp;
-  // Scale by w
-  obj/=obj.m_w;
+//  // Analytical working method
+//  std::cout<<"Mouse pos "<<_x<<" "<<_y<<" ";
+//  ngl::Mat4 t=m_cam.getProjectionMatrix();//m_projection;
+//  ngl::Mat4 v=m_cam.getViewMatrix();//m_view;
+//  // as ngl:: and OpenGL use different formats need to transpose the matrix.
+//  t.transpose();
+//  v.transpose();
+//  ngl::Mat4 inverse=( t*v).inverse();
+
+//  ngl::Vec4 tmp(0,0,1.0f,1.0f);
+//  // convert into NDC
+//  tmp.m_x=(2.0f * _x) / width() - 1.0f;
+//  tmp.m_y=1.0f - (2.0f * _y) / height();
+//  // scale by inverse MV * Project transform
+//  ngl::Vec4 obj=inverse*tmp;
+//  // Scale by w
+//  obj/=obj.m_w;
 
 //  std::cout<<"Coordinates in object space:"<<obj.m_x<<","<<obj.m_y<<","<<obj.m_z<<std::endl;
 
-  return obj.toVec3();
-  /* ngl now has this built in as well
-  return ngl::unProject(ngl::Vec3(_x,_y,1.0f),
-                        m_view,
-                        m_projection,
+//  return obj.toVec3();
+
+//  ngl now has this built in as well
+    return ngl::unProject(ngl::Vec3(_x,_y,1.0f),
+                        m_cam.getViewMatrix(),
+                        m_cam.getProjectionMatrix(),
                         ngl::Vec4(0,0,width(),height())
                         );
-*/
+
 }
 
 
